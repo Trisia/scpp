@@ -192,6 +192,8 @@ func (p *procFd) iterFdDir() {
 		return
 	}
 	var buf [128]byte
+	var cmdline []byte
+	var exe string
 
 	for _, file := range fi {
 		fd := path.Join(fddir, file.Name())
@@ -218,7 +220,19 @@ func (p *procFd) iterFdDir() {
 				}
 				z := bytes.SplitN(buf[:n], []byte(" "), 3)
 				name := getProcName(z[1])
-				p.p = &Process{p.pid, name}
+
+				// 程序运行参数
+				cmdline, err = ioutil.ReadFile(path.Join(p.base, "cmdline"))
+				if err != nil {
+					return
+				}
+				// 可执行文件位置
+				exe, err = os.Readlink(path.Join(p.base, "cmdline"))
+				if err != nil {
+					return
+				}
+
+				p.p = &Process{p.pid, name, exe, string(cmdline)}
 			}
 			sk.Process = p.p
 		}

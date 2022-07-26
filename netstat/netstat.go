@@ -29,6 +29,8 @@ type SockTabEntry struct {
 type Process struct {
 	Pid  int
 	Name string
+	Exe  string
+	Cmd  string
 }
 
 func (p *Process) String() string {
