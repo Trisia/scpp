@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"net"
 	"os"
 	"path"
@@ -224,11 +225,13 @@ func (p *procFd) iterFdDir() {
 				// 程序运行参数
 				cmdline, err = ioutil.ReadFile(path.Join(p.base, "cmdline"))
 				if err != nil {
+					log.Printf("err: %+v", err)
 					return
 				}
 				// 可执行文件位置
-				exe, err = os.Readlink(path.Join(p.base, "cmdline"))
+				exe, err = os.Readlink(path.Join(p.base, "exe"))
 				if err != nil {
+					log.Printf("err: %+v", err)
 					return
 				}
 

@@ -36,7 +36,7 @@ func main() {
 	}
 
 	if *csv != "" {
-		outfile, err = os.Open(*csv)
+		outfile, err = os.Create(*csv)
 		if err != nil {
 			panic(err)
 		}
